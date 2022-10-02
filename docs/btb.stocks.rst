@@ -4,14 +4,6 @@ btb.stocks package
 Submodules
 ----------
 
-btb.stocks.buddy\_the\_broker module
-------------------------------------
-
-.. automodule:: btb.stocks.buddy_the_broker
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 btb.stocks.stocks module
 ------------------------
 
