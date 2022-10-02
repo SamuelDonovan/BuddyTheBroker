@@ -12,10 +12,12 @@ def main():
     display = Display()
     
     # Main loop
+    count = 0
     while True:
-        stock = Stocks()
+        stock = Stocks(count)
         display.update(stock.symbol)
-        time.sleep(10)
+        count+=1
+        time.sleep(1)
 
 if __name__ == '__main__':
     main()

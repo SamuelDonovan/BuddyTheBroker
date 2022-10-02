@@ -11,9 +11,16 @@ class Stocks():
         logging.error(f"Invalid file path: {data_file}")
     data = read_csv(data_file)
 
-    def __init__(self, stock_range = 999):
-        logging.debug(f"Stock range selected: {stock_range}")
-        self.index = randrange(stock_range)
+    def __init__(self, index = None):
+        MAX_INDEX = 999
+        if MAX_INDEX < index:
+            logging.error(f"Invalid passed index: {index}")
+            raise ValueError(f"Invalid passed index: {index}")
+        elif None != index:
+            self.index = index
+        else:
+            self.index = randrange(MAX_INDEX)
+        logging.debug(f"Stock index selected: {self.index}")
         self.__country = self.data.Country[self.index]
         self.__description = self.data.Description[self.index]
         self.__divdend = self.data.DividendYield[self.index]

@@ -5,9 +5,11 @@ import logging
 from tkinter import ttk
 import tkinter as tk
 import math
+import os
 
 class Display():
-    def __init__(self, bg_color="light blue", fg_color="white", font="System 70", bar_length="800"):
+    def __init__(self, bg_color="red", fg_color="green", font="System 80", bar_length="800"):
+        os.environ["DISPLAY"] = ":0"
         self.bg_color = bg_color
         self.fg_color = fg_color
         self.font = font
