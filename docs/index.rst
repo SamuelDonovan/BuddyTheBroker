@@ -13,7 +13,6 @@ Welcome to Buddy The Broker's (BTB) documentation!
    modules
 
 
-
 Indices and tables
 ==================
 
