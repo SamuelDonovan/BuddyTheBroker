@@ -1,3 +1,7 @@
+.. image:: docs/images/projectLogo/btbLogo.png
+   :width: 60
+   :align: center
+
 Buddy the Broker
 ================
 
