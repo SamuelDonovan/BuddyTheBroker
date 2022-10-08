@@ -7,8 +7,10 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
-   btb.display
-   btb.stocks
+   btb.libcamera
+   btb.libdisplay
+   btb.libstocks
+   btb.libtrading
 
 Module contents
 ---------------

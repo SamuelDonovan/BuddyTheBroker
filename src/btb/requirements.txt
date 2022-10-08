@@ -1,2 +1,3 @@
 keyring==18.0.1
 pandas
+pyrh==2.0

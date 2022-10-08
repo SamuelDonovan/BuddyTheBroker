@@ -1,13 +1,13 @@
-btb.display package
-===================
+btb.libcamera package
+=====================
 
 Submodules
 ----------
 
-btb.display.display module
---------------------------
+btb.libcamera.camera module
+---------------------------
 
-.. automodule:: btb.display.display
+.. automodule:: btb.libcamera.camera
    :members:
    :undoc-members:
    :show-inheritance:
@@ -15,7 +15,7 @@ btb.display.display module
 Module contents
 ---------------
 
-.. automodule:: btb.display
+.. automodule:: btb.libcamera
    :members:
    :undoc-members:
    :show-inheritance:

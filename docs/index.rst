@@ -19,3 +19,5 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
+
+.. note:: Any profits made from this project will go towards buying Buddy more toys.

@@ -1,13 +1,13 @@
-btb.stocks package
-==================
+btb.libstocks package
+=====================
 
 Submodules
 ----------
 
-btb.stocks.stocks module
-------------------------
+btb.libstocks.stocks module
+---------------------------
 
-.. automodule:: btb.stocks.stocks
+.. automodule:: btb.libstocks.stocks
    :members:
    :undoc-members:
    :show-inheritance:
@@ -15,7 +15,7 @@ btb.stocks.stocks module
 Module contents
 ---------------
 
-.. automodule:: btb.stocks
+.. automodule:: btb.libstocks
    :members:
    :undoc-members:
    :show-inheritance:

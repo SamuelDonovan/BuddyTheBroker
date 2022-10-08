@@ -1,25 +1,38 @@
-#!/usr/bin/env python3
+"""
+.. module:: stocks
+   :platform: Unix, Windows
+   :synopsis: An aggregation of stock data.
 
+.. moduleauthor:: Samuel Mehalko <samuel.mehalko@gmail.com>
+
+:synopis: An aggregation of stock data with a simple API.
+"""
+
+# From the Python Standard Library
 import os
-from pandas import read_csv
 from random import randrange
 import logging
+
+# From the pandas library
+from pandas import read_csv
 
 
 class Stocks:
     """
     Provides stock data for a selected stock from the top 1000 measured by market capitial.
 
-    :param index: Index for selected stock into the list of stocks sorted by market capitalization. If not specified a random index will be selected. defaults to None.
-    :type index: int, optional
+    :param index: Index for selected stock into the list of stocks sorted by market capitalization. If not specified a random index will be selected, defaults to None.
+    :type index: int
     """
 
-    data_file = os.path.join(
+    __data_file = os.path.join(
         os.path.dirname(os.path.realpath(__file__)), "data/Russell1000Index.csv"
     )
-    if not os.path.exists(data_file):
-        logging.error(f"Invalid file path: {data_file}")
-    data = read_csv(data_file)
+    if not os.path.exists(__data_file):
+        logging.error(f"Invalid file path: {__data_file}")
+        raise Exception(f"Invalid file path: {__data_file}")
+
+    __data = read_csv(__data_file)
 
     def __init__(self, index=None):
         """
@@ -34,12 +47,12 @@ class Stocks:
         else:
             self.index = randrange(MAX_INDEX)
         logging.debug(f"Stock index selected: {self.index}")
-        self.__country = self.data.Country[self.index]
-        self.__description = self.data.Description[self.index]
-        self.__divdend = self.data.DividendYield[self.index]
-        self.__market_cap = self.data.MarketCap[self.index]
-        self.__sector = self.data.GICSSector[self.index]
-        self.__symbol = self.data.Symbol[self.index]
+        self.__country = self.__data.Country[self.index]
+        self.__description = self.__data.Description[self.index]
+        self.__divdend = self.__data.DividendYield[self.index]
+        self.__market_cap = self.__data.MarketCap[self.index]
+        self.__sector = self.__data.GICSSector[self.index]
+        self.__symbol = self.__data.Symbol[self.index]
 
     @property
     def country(self):
@@ -55,6 +68,7 @@ class Stocks:
     def description(self):
         """
         Returns a short description of the selected stock.
+
         :return: Stock description.
         """
         return self.__description
@@ -84,7 +98,7 @@ class Stocks:
         """
         The sector of the selected stock.
         The market sector is a part of the economy, usually broader than an industry. Two industries may form part of one market sector.
-        The eleven sectors are:
+        The eleven sectors are:\n
         1. Communication services
         2. Consumer discretionary
         3. Consumer staples
@@ -105,7 +119,7 @@ class Stocks:
     def symbol(self):
         """
         The symbol (ticker) of the selected stock.
-        A stock symbol is a unique series of letters assigned to a security for trading purposes. 
+        A stock symbol is a unique series of letters assigned to a security for trading purposes.\n
         e.g. AAPL for the computer company Apple.
 
         :return: Symbol.
