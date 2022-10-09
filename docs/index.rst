@@ -6,9 +6,23 @@
 Welcome to Buddy The Broker's (BTB) documentation!
 ==================================================
 
+.. image:: images/projectLogo/btbLogo.png
+    :width: 60
+    :align: center
+
+An embedded system allowing for my cat (Buddy) to trade stocks.
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
+
+   abstract
+
+   project_description
+
+   interface_description
+
+   functional_description
 
    modules
 
