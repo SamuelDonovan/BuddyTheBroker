@@ -3,14 +3,14 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to Buddy The Broker's (BTB) documentation!
-==================================================
+Buddy The Broker (BTB)
+======================
 
-.. image:: images/projectLogo/btbLogo.png
+.. figure:: images/projectLogo/btbLogo.png
     :width: 60
     :align: center
 
-An embedded system allowing for my cat (Buddy) to trade stocks.
+    An embedded system allowing for my cat (Buddy) to trade stocks.
 
 .. toctree::
    :maxdepth: 2
