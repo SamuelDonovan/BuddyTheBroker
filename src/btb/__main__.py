@@ -38,6 +38,10 @@ def main():
         keyring.get_password("robinhood", "qr_code"),
     )
 
+    # Currently testing trading ability.
+    # trading.buy("UMC")
+    # trading.sell("UMC")
+
     # Main loop
     count = 0
     while True:

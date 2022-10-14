@@ -35,7 +35,7 @@ Schedule
 
    * ☑ Stock class (libstock) written
 
-   * ☐ Trading library (libtrading) can buy and sell stocks
+   * ☑ Trading library (libtrading) can buy and sell stocks
 
 * 10/24
 
