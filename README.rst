@@ -39,11 +39,11 @@ Schedule
 
 * 10/24
 
-   * ☐ Camera library (libcamera) can identify cats and return coordinates
+   * ☑ Camera library (libcamera) can identify cats and return coordinates
 
 * 10/31
 
-   * ☐ Camera library (libcamera) draws box and send video to remote storage
+   * ☑ Camera library (libcamera) draws box and sends video to remote storage
 
    * ☐ Trading library (libtrading) algorithm started
 
