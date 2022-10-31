@@ -45,7 +45,7 @@ Schedule
 
    * ☑ Camera library (libcamera) draws box and sends video to remote storage
 
-   * ☐ Trading library (libtrading) algorithm started
+   * ☑ Trading library (libtrading) algorithm started
 
 * 11/7
 

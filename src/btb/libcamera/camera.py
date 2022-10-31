@@ -25,12 +25,16 @@ class Camera:
     :type resolution: int
     :param fps: Frames per second.
     :type fps: int
+    :param brightness: Brightness as a whole number percentage. (ex 50, 100, 15).
+    :type brightness: int
     :param detector: Cascade classifier detector xml file.
     :type detector: str
     """
 
-    def __init__(self, input, output, resolution, fps, detector):
+    def __init__(self, input, output, resolution, fps, brightness, detector):
         self.cap = cv2.VideoCapture(input)
+        if 0 == input:
+            os.system("v4l2-ctl --set-ctrl=rotate=90")
         if resolution:
             if resolution not in [144, 240, 360, 480, 720, 1080]:
                 logging.error(f"Invalid resolution selected: {resolution}")
@@ -51,6 +55,12 @@ class Camera:
         else:
             fps = self.cap.get(cv2.CAP_PROP_FPS)
         logging.debug(f"Frames per second set to {str(fps)}.")
+
+        if brightness:
+            self.cap.set(cv2.CAP_PROP_BRIGHTNESS, int(brightness))
+        else:
+            brightness = self.cap.get(cv2.CAP_PROP_BRIGHTNESS)
+        logging.debug(f"Brightness set to {str(brightness)}%.")
 
         self.output = cv2.VideoWriter(
             os.path.join(os.path.dirname(__file__), output),
@@ -97,6 +107,7 @@ class Camera:
         :rtype: bool
         """
         if None != self.coordinates():
+            # logging.debug(f"Image detected at {datetime}.")
             return True
         else:
             return False

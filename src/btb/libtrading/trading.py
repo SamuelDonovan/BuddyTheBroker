@@ -43,27 +43,48 @@ class Trading:
             raise Exception(f"Failed to sign in to robinhood account {username}.")
         account_info = self.rh.get_account()
 
-    def buy(self, ticker) -> None:
+    def buy_dollar_amount(self, ticker, dollar_amount) -> None:
         """
-        Places a market buy order of quantity one for provided stock ticker.
+        Places a market buy order for provided stock ticker given a dollar amount for the amount to buy.
 
         :param ticker: Stock ticker (symbol) to be purchased.
         :type ticker: str
+        :param dollar_amount: The dollar amount used to calculated the number of shares to buy.
+        :type dollar_amount: float
+
+        :return: None.
+        """
+        self.quote = self.rh.get_quote(ticker)
+        dollar_amount = round(dollar_amount, 2)
+        shares = float(dollar_amount) / float(self.quote['ask_price'])
+        self.buy_quantity(ticker, shares)
+
+    def buy_quantity(self, ticker, quantity) -> None:
+        """
+        Places a market buy order for provided stock ticker given a quantity to buy.
+
+        :param ticker: Stock ticker (symbol) to be purchased.
+        :type ticker: str
+        :param quantity: The amount of shares to be purchased.
+        :type quantity: float
 
         :return: None.
         """
         self.account_info = self.rh.get_account()
         self.quote = self.rh.get_quote(ticker)
+        quantity = round(quantity, 2)
         logging.info(f"Buy triggered for {ticker}.")
         logging.info(f"Current ask price is {self.quote['ask_price']}.")
+        logging.info(f"Quantity is {quantity}.")
         logging.info(f"Current buying power is {self.account_info['buying_power']}")
+        logging.info(f"Cost is {(float(self.quote['bid_price']) * float(quantity))}.")
         logging.info(
-            f"Buying power after purchase {float(self.account_info['buying_power']) - float(self.quote['ask_price'])}"
+            f"Buying power after purchase {float(self.account_info['buying_power']) - (float(self.quote['ask_price']) * float(quantity))}"
         )
 
         # Verify purchasing power sufficent for purchase.
         if 0 > (
-            float(self.account_info["buying_power"]) - float(self.quote["ask_price"])
+            float(self.account_info["buying_power"]) - (float(self.quote['ask_price']) * float(quantity))
         ):
             logging.warning(f"Failed to purchase {ticker}, insufficient buying power!")
             return
@@ -71,28 +92,49 @@ class Trading:
             symbol=ticker,
             instrument_URL=self.rh.instrument(ticker)["url"],
             time_in_force="GFD",
-            quantity=1,
+            quantity=quantity,
         )
         self.account_info = self.rh.get_account()
         logging.info(f"Purchase of {ticker} sucessful.")
         logging.info(f"Remaining buying power is {self.account_info['buying_power']}")
 
-    def sell(self, ticker) -> None:
+    def sell_dollar_amount(self, ticker, dollar_amount) -> None:
         """
-        Places a market sell order of quantity one for provided stock ticker.
+        Places a market sell order for provided stock ticker given a dollar amount for the amount to sell.
 
         :param ticker: Stock ticker (symbol) to be sold.
         :type ticker: str
+        :param dollar_amount: The dollar amount used to calculated the number of shares to sell.
+        :type dollar_amount: float
+
+        :return: None.
+        """
+        self.quote = self.rh.get_quote(ticker)
+        dollar_amount = round(dollar_amount, 2)
+        shares = float(dollar_amount) / float(self.quote['ask_price'])
+        self.sell_quantity(ticker, shares)
+
+    def sell_quantity(self, ticker, quantity) -> None:
+        """
+        Places a market sell order for provided stock ticker given a quantity to sell.
+
+        :param ticker: Stock ticker (symbol) to be sold.
+        :type ticker: str
+        :param quantity: The amount of shares to be sold.
+        :type quantity: float
 
         :return: None.
         """
         self.account_info = self.rh.get_account()
         self.quote = self.rh.get_quote(ticker)
+        quantity = round(quantity, 2)
         logging.info(f"Sell triggered for {ticker}.")
         logging.info(f"Current bid price is {self.quote['bid_price']}.")
         logging.info(f"Current buying power is {self.account_info['buying_power']}")
+        logging.info(f"Quantity is {quantity}.")
+        logging.info(f"Cost is {(float(self.quote['bid_price']) * float(quantity))}.")
         logging.info(
-            f"Buying power after sell {float(self.account_info['buying_power']) + float(self.quote['bid_price'])}"
+            f"Buying power after sell {float(self.account_info['buying_power']) + (float(self.quote['bid_price']) * float(quantity))}"
         )
 
         # Verify stock is owned.
@@ -118,7 +160,7 @@ class Trading:
             symbol=ticker,
             instrument_URL=stock_to_sell_instrument_url,
             time_in_force="GFD",
-            quantity=1,
+            quantity=quantity,
         )
         self.account_info = self.rh.get_account()
         logging.info(f"Sale of {ticker} sucessful.")
