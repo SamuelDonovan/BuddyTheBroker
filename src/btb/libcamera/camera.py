@@ -8,10 +8,13 @@
 :synopis: Convenience wrapper for camera functionality.
 """
 
-import cv2
+# From the Python Standard Library
+from datetime import datetime
 import logging
 import os
 
+# From Open Computer Vision
+import cv2
 
 class Camera:
     """
@@ -39,6 +42,7 @@ class Camera:
             if resolution not in [144, 240, 360, 480, 720, 1080]:
                 logging.error(f"Invalid resolution selected: {resolution}")
                 raise RuntimeError(f"Invalid resolution selected: {resolution}")
+            self.resolution = resolution
             frame_width = int(resolution * 4 / 3)
             frame_height = int(resolution)
             self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, frame_width)
@@ -95,6 +99,16 @@ class Camera:
             for (i, (x, y, w, h)) in enumerate(rects):
                 cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 0, 255), 2)
 
+            font = cv2.FONT_HERSHEY_PLAIN
+            color = (255, 255, 255)
+            scale = 1
+            thickness = 1
+            origin = (10, self.resolution - 5)
+
+            # Add timestamp.
+            cv2.putText(frame, str(datetime.now()), origin,
+                font, scale, color, thickness, cv2.LINE_AA)
+
             # writing the new frame in output
             self.output.write(frame)
             return rects
@@ -103,11 +117,11 @@ class Camera:
         """
         Determines if the image of interest is present on the current frame of the image.
 
-        :return: If a cat was detected or not.
+        :return: True if a the image of interest was detected or not.
         :rtype: bool
         """
-        if None != self.coordinates():
-            # logging.debug(f"Image detected at {datetime}.")
+        if () != self.coordinates():
+            logging.debug(f"Image detected at {datetime.now()}!")
             return True
         else:
             return False

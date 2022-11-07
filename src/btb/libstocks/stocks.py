@@ -55,7 +55,7 @@ class Stocks:
         self.__symbol = self.__data.Symbol[self.index]
 
     @property
-    def country(self):
+    def country(self) -> str:
         """
         Returns the contry of the selected stock.
         For this data set all stocks are U.S. stocks.
@@ -65,7 +65,7 @@ class Stocks:
         return self.__country
 
     @property
-    def description(self):
+    def description(self) -> str:
         """
         Returns a short description of the selected stock.
 
@@ -74,7 +74,7 @@ class Stocks:
         return self.__description
 
     @property
-    def divdend(self):
+    def divdend(self) -> str:
         """
         Returns the dividend yield of the selected stock.
         A dividend is a distribution of a portion of a company's earnings, decided by the board of directors, paid to a class of its shareholders.
@@ -84,17 +84,17 @@ class Stocks:
         return self.__divdend
 
     @property
-    def market_cap(self):
+    def market_cap(self) -> str:
         """
         Returns the market capitalization of the selected stock.
-        Market capitalization is the total dollar value of all outstanding shares of a company at the current market price.
+        Market capitalization is the total dollar value of all outstanding shares of a company at the current market price.
 
         :return: Market capitalization.
         """
         return self.__market_cap
 
     @property
-    def sector(self):
+    def sector(self) -> str:
         """
         The sector of the selected stock.
         The market sector is a part of the economy, usually broader than an industry. Two industries may form part of one market sector.
@@ -115,8 +115,16 @@ class Stocks:
         """
         return self.__sector
 
+    def size(self) -> int:
+        """
+        Returns the number of elements in the data set.
+
+        :return: The number of elements in the data set.
+        """
+        return self.__data.shape[0]
+
     @property
-    def symbol(self):
+    def symbol(self) -> str:
         """
         The symbol (ticker) of the selected stock.
         A stock symbol is a unique series of letters assigned to a security for trading purposes.\n

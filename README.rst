@@ -49,7 +49,7 @@ Schedule
 
 * 11/7
 
-   * ☐ Trading library (libtrading) algorithm completed
+   * ☑ Trading library (libtrading) algorithm completed
 
 * 11/17
 

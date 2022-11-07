@@ -9,11 +9,9 @@
 """
 
 # From the Python Standard Library
-import datetime
 import logging
 from tkinter import ttk
 import tkinter as tk
-import math
 import os
 
 
@@ -47,6 +45,16 @@ class Display:
 
         self.__pb_size = 700
 
+        if self.enable_progress:
+            # Make the top progress bar (tpb).
+            self.tpb = ttk.Progressbar(
+                self.root,
+                orient="horizontal",
+                mode="determinate",
+                length=self.__pb_size,
+            )
+            self.tpb.pack(side=tk.TOP)
+
         self.label = tk.Label(
             self.root,
             textvariable=self.display_text,
@@ -58,17 +66,20 @@ class Display:
         self.label.pack(expand=True)
 
         if self.enable_progress:
-            self.pb = ttk.Progressbar(
+            # Make the bottom progress bar (bpb).
+            self.bpb = ttk.Progressbar(
                 self.root,
                 orient="horizontal",
                 mode="determinate",
                 length=self.__pb_size,
             )
-            self.pb.pack(side=tk.BOTTOM)
+            self.bpb.pack(side=tk.BOTTOM)
 
         logging.info(
             f"Creating display object, background: {bg_color}, forground: {fg_color}, font: {font}"
         )
+        self.current_text = "Starting"
+        self.current_progress = 0
 
     def write(self, text) -> None:
         """
@@ -82,20 +93,31 @@ class Display:
         if str != type(text):
             logging.error(f"Invalid text to display: {text} - Must be of type str.")
             raise TypeError(f"Invalid text to display: {text} - Must be of type str.")
+        # Exit function early if no value is added.
+        if text == self.current_text:
+            return None
+        self.current_text = text
         self.display_text.set(text.upper())
         self.label.pack(expand=True)
         self.root.update()
         logging.info(f"Writing text: {text}")
 
-    def loading_bar(self, progress) -> None:
+    def loading_bar(self, progress, bar) -> None:
         """
         Writes string to the screen.
 
         :param progress: Percentage, in the form of a number spanning zero to one hundred, to set the progress bar to.
         :type progress: int
 
+        :param bar: True to update the top bar, false to update the bottom bar.
+        :type bar: bool
+
         :return: None
         """
+        # Exit function early if no value is added.
+        if progress == self.current_progress:
+            return None
+        self.current_progress = progress
         if not self.enable_progress:
             logging.warning(
                 f"This Display object does not support progress bars. Please enable the use of progress bars during construction."
@@ -104,20 +126,11 @@ class Display:
         if None == progress:
             logging.error(f"Invalid progress percentage: {progress}")
             raise TypeError(f"Invalid progress percentage: {progress}")
-        self.pb["value"] = progress
-
-    def __time_mod(self, increment_minute=1):
-        if (increment_minute > 60) or (increment_minute < 1):
-            logging.error(f"Invalid time increment: {increment_minute}")
-            return None
-        max_time = increment_minute * 60
-        now = datetime.datetime.now()
-        seconds_remaining = now.minute % increment_minute * 60 + now.second
-        percentage = math.ceil(seconds_remaining / max_time * 100)
-        if (percentage > 100) or (percentage < 0):
-            logging.error(f"Invalid percentage: {percentage}")
-            return None
-        return percentage
+        if bar:
+            self.tpb["value"] = progress
+        else:
+            self.bpb["value"] = progress
+        self.root.update()
 
 
 if __name__ == "__main__":
