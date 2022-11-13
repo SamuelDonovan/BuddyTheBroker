@@ -10,6 +10,7 @@ Subpackages
    btb.libcamera
    btb.libdisplay
    btb.libstocks
+   btb.libtimer
    btb.libtrading
 
 Module contents

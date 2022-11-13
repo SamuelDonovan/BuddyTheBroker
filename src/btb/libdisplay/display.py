@@ -28,7 +28,11 @@ class Display:
     """
 
     def __init__(
-        self, bg_color="red", fg_color="green", font="System 80", enable_progress=False
+        self,
+        bg_color="grey55",
+        fg_color="blue",
+        font="System 80",
+        enable_progress=False,
     ):
         """
         Constructor method.

@@ -83,6 +83,18 @@ class Stocks:
         """
         return self.__divdend
 
+    def find_ticker_by_instrument_id(self, instrument_id) -> str:
+        """
+        Uses a Robinhood instrument ID to find the associated stock ticker within the data set.
+
+        :param instrument_id: Instrument ID used to find associated stock ticker.
+        :type instrument_id: str
+
+        :return: Stock ticker.
+        """
+        ticker_data = self.__data.loc[self.__data["Symbol"] == instrument_id]
+        return ticker_data["Symbol"][0]
+
     @property
     def market_cap(self) -> str:
         """

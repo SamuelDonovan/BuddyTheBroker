@@ -53,7 +53,7 @@ Schedule
 
 * 11/17
 
-   * ☐ Main written connecting all libraries
+   * ☑ Main written connecting all libraries
 
 * 11/28
 

@@ -12,6 +12,7 @@
 import datetime
 import logging
 import math
+from typing import Dict
 
 # From pyrh
 from pyrh import Robinhood
@@ -29,7 +30,7 @@ class Trading:
     :type qr_code: str
     """
 
-    def __init__(self, username, password, qr_code, increment_minute=10):
+    def __init__(self, username, password, qr_code):
         """
         Constructor method.
         """
@@ -39,10 +40,10 @@ class Trading:
             password=password,
             qr_code=qr_code,
         ):
-            logging.info(f"Signed in to robinhood account {username}.")
+            logging.info(f"Signed in to Robinhood account {username}.")
         else:
-            logging.error(f"Failed to sign in to robinhood account {username}.")
-            raise Exception(f"Failed to sign in to robinhood account {username}.")
+            logging.error(f"Failed to sign in to Robinhood account {username}.")
+            raise Exception(f"Failed to sign in to Robinhood account {username}.")
         account_info = self.rh.get_account()
         if (increment_minute > 60) or (increment_minute < 1):
             logging.error(f"Invalid time increment: {increment_minute}.")
@@ -51,8 +52,6 @@ class Trading:
         self.max_time = increment_minute * 60
         self.timer_hit = False
         self.percentage = 0
-        print(self.rh.securities_owned())
-
 
     def buy_dollar_amount(self, ticker, dollar_amount) -> None:
         """
@@ -66,8 +65,8 @@ class Trading:
         :return: None.
         """
         self.quote = self.rh.get_quote(ticker)
-        dollar_amount = round(dollar_amount, 2)
-        shares = float(dollar_amount) / float(self.quote['ask_price'])
+        dollar_amount = self.round_decimals_down(dollar_amount)
+        shares = float(dollar_amount) / float(self.quote["ask_price"])
         self.buy_quantity(ticker, shares)
 
     def buy_with_current_funds(self, ticker) -> None:
@@ -79,8 +78,7 @@ class Trading:
 
         :return: None.
         """
-        self.buy_dollar_amount(ticker, float(self.rh.get_account()['buying_power']))
-
+        self.buy_dollar_amount(ticker, float(self.rh.get_account()["buying_power"]))
 
     def buy_quantity(self, ticker, quantity) -> None:
         """
@@ -95,7 +93,7 @@ class Trading:
         """
         self.account_info = self.rh.get_account()
         self.quote = self.rh.get_quote(ticker)
-        quantity = round(quantity, 2)
+        quantity = self.round_decimals_down(quantity)
         logging.info(f"Buy triggered for {ticker}.")
         logging.info(f"Current ask price is {self.quote['ask_price']}.")
         logging.info(f"Quantity is {quantity}.")
@@ -107,7 +105,8 @@ class Trading:
 
         # Verify purchasing power sufficient for purchase.
         if 0 > (
-            float(self.account_info["buying_power"]) - (float(self.quote['ask_price']) * float(quantity))
+            float(self.account_info["buying_power"])
+            - (float(self.quote["ask_price"]) * float(quantity))
         ):
             logging.warning(f"Failed to purchase {ticker}, insufficient buying power!")
             return
@@ -121,31 +120,63 @@ class Trading:
         logging.info(f"Purchase of {ticker} successful.")
         logging.info(f"Remaining buying power is {self.account_info['buying_power']}")
 
-    def get_timer_hit(self) -> bool:
+    def get_least_recently_purchased(self) -> Dict[str, float]:
         """
-        Class getter for the timer_hit member.
+        Returns Robinhood instrument ID and quantity of least recently purchased stock.
 
-        :return: True if timer needs restarted, false otherwise.
-        :rtype: bool
+        :return: Dictionary containing Robinhood instrument ID and quantity of least recently purchased stock.
+        :rtype: dict[str, float]
         """
-        return self.timer_hit
+        stocks_owned = pd.DataFrame.from_records(self.rh.securities_owned()["results"])
+        if stocks_owned.empty:
+            logging.error(
+                "Attempting to find least recently purchased stock, but own none!"
+            )
+            raise Exception(
+                "Attempting to find least recently purchased stock, but own none!"
+            )
+        stocks_owned["updated_at"] = pd.to_datetime(stocks_owned["updated_at"])
+        stocks_owned = stocks_owned.sort_values(by=["updated_at"])
+        stocks_owned = stocks_owned.reset_index()
 
+        return {
+            "instrument_id": stocks_owned["instrument_id"][0],
+            "quantity": stocks_owned["quantity"][0],
+        }
 
-    def restart_timer(self) -> bool:
+    def liquidity(self) -> int:
         """
-        Restarts the timer used in the timer function.
+        Returns the integer percentage of account liquidity.
+        e.g. If the account is worth $100 and currently has a buying power of $10 then
+        the liquidity is 10 (10%).
 
-        The indented use case is that once the timer has been reached this function can be called to reset it.
-    
-        :return: True if timer successfully restarted, false otherwise.
-        :rtype: bool
+        :return: Integer percentage of account liquidity.
+        :rtype: int
         """
-        if self.timer_hit:
-            self.timer_hit = False
-            return True
-        else:
-            logging.warning(f"Attempting to reset a timer that has yet to be set!")
-            return False
+        return round((float(self.rh.get_account()["buying_power"]) / float(self.rh.portfolios()["equity"])), 2)
+
+    def round_decimals_down(self, number: float, decimals: int = 5) -> float:
+        """
+        Returns a value rounded down to a specific number of decimal places.
+
+        :param number: Number to be rounded.
+        :type number: float
+
+        :param decimals: Number of decimal place at which to round down.
+        :type decimals: int
+
+        return: Round float.
+        :rtype: float
+        """
+        if not isinstance(decimals, int):
+            raise TypeError("decimal places must be an integer.")
+        elif decimals < 0:
+            raise ValueError("Decimal places has to be 0 or more.")
+        elif decimals == 0:
+            return math.floor(number)
+
+        factor = 10**decimals
+        return round(math.floor(number * factor) / factor, decimals)
 
     def sell_dollar_amount(self, ticker, dollar_amount) -> None:
         """
@@ -159,8 +190,8 @@ class Trading:
         :return: None.
         """
         self.quote = self.rh.get_quote(ticker)
-        dollar_amount = round(dollar_amount, 2)
-        shares = float(dollar_amount) / float(self.quote['ask_price'])
+        dollar_amount = self.round_decimals_down(dollar_amount)
+        shares = float(dollar_amount) / float(self.quote["ask_price"])
         self.sell_quantity(ticker, shares)
 
     def sell_quantity(self, ticker, quantity) -> None:
@@ -176,7 +207,7 @@ class Trading:
         """
         self.account_info = self.rh.get_account()
         self.quote = self.rh.get_quote(ticker)
-        quantity = round(quantity, 2)
+        quantity = self.round_decimals_down(quantity)
         logging.info(f"Sell triggered for {ticker}.")
         logging.info(f"Current bid price is {self.quote['bid_price']}.")
         logging.info(f"Current buying power is {self.account_info['buying_power']}")
@@ -212,33 +243,8 @@ class Trading:
             quantity=quantity,
         )
         self.account_info = self.rh.get_account()
-        logging.info(f"Sale of {ticker} sucessful.")
+        logging.info(f"Sale of {ticker} successful.")
         logging.info(f"Current buying power is {self.account_info['buying_power']}")
-
-    def timer(self) -> int:
-        """
-        Timer that returns a percentage in the form of a decimal to which a time increment (set in initializer) has been met.
-        
-        E.g. if the time increment is set to 10 minutes and the time is currently 1:05 the timer will return 50. If the time
-        was 1:07 the timer would return 70. If the time was 12:13 the timer would return 30.
-
-        Once the timer has reached 100% the value will be locked until reset with the restart_timer function.
-    
-        :return: Percentage of elapsed time on the timer.
-        :rtype: int
-        """
-        now = datetime.datetime.now()
-        seconds_remaining = now.minute % self.increment_minute * 60 + now.second
-        percentage = math.ceil(seconds_remaining / self.max_time * 100)
-        if (percentage < 0):
-            logging.error(f"Invalid percentage: {percentage}")
-            return None
-        if percentage < self.percentage:
-            self.percentage = percentage
-            self.timer_hit = True
-            return 100
-        self.percentage = percentage
-        return self.percentage
 
 
 if __name__ == "__main__":

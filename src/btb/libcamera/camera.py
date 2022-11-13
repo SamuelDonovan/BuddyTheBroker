@@ -16,6 +16,7 @@ import os
 # From Open Computer Vision
 import cv2
 
+
 class Camera:
     """
     Camera module for computer vision with several variable options.
@@ -70,7 +71,7 @@ class Camera:
             os.path.join(os.path.dirname(__file__), output),
             cv2.VideoWriter_fourcc(*"mp4v"),
             int(fps),
-            (int(frame_width), int(frame_height))
+            (int(frame_width), int(frame_height)),
         )
         self.detector = cv2.CascadeClassifier(detector)
 
@@ -106,8 +107,16 @@ class Camera:
             origin = (10, self.resolution - 5)
 
             # Add timestamp.
-            cv2.putText(frame, str(datetime.now()), origin,
-                font, scale, color, thickness, cv2.LINE_AA)
+            cv2.putText(
+                frame,
+                str(datetime.now()),
+                origin,
+                font,
+                scale,
+                color,
+                thickness,
+                cv2.LINE_AA,
+            )
 
             # writing the new frame in output
             self.output.write(frame)
