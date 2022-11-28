@@ -31,7 +31,7 @@ class Display:
         self,
         bg_color="grey55",
         fg_color="blue",
-        font="System 80",
+        font="System 150",
         enable_progress=False,
     ):
         """

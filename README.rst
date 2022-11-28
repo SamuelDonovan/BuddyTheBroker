@@ -57,7 +57,7 @@ Schedule
 
 * 11/28
 
-   * ☐ Acceptance testing & polish product
+   * ☑ Acceptance testing & polish product
 
 * 12/5
 

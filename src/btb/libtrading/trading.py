@@ -45,13 +45,6 @@ class Trading:
             logging.error(f"Failed to sign in to Robinhood account {username}.")
             raise Exception(f"Failed to sign in to Robinhood account {username}.")
         account_info = self.rh.get_account()
-        if (increment_minute > 60) or (increment_minute < 1):
-            logging.error(f"Invalid time increment: {increment_minute}.")
-            raise Exception(f"Invalid time increment: {increment_minute}.")
-        self.increment_minute = increment_minute
-        self.max_time = increment_minute * 60
-        self.timer_hit = False
-        self.percentage = 0
 
     def buy_dollar_amount(self, ticker, dollar_amount) -> None:
         """

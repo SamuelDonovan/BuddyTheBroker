@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 
 # From the Python Standard Library
+from datetime import datetime
 import logging
 import os
+from pathlib import Path
 import time
 
 # From keyring
@@ -29,7 +31,14 @@ def main():
     # -- Initialization -- #
     # -------------------- #
 
+    log_file = os.path.join(
+            os.path.dirname(__file__), f"../logs/btb_{datetime.now()}.log"
+            )
+    if not os.path.exists(log_file):
+        Path(log_file).touch()
+
     logging.basicConfig(
+        filename = log_file,
         level=logging.DEBUG,
         format="%(asctime)s:%(name)s:%(filename)s:%(levelname)s - %(message)s",
         datefmt="%m/%d/%Y %I:%M:%S %p",
@@ -39,7 +48,7 @@ def main():
     camera_device: int = 0
 
     # The resolution (veritical pixel count).
-    resolution: int = 240
+    resolution: int = 480
 
     # The frames per second.
     framerate: int = 10
@@ -83,7 +92,7 @@ def main():
     # Counter used to determine the number of frames
     # Buddy has been detected in.
     buddy_present_count: int = 0
-    buddy_present_threshold: int = 60
+    buddy_present_threshold: int = 10
 
     # For this project holding keeping ten stocks
     # in rotation seems like a good round numeber
