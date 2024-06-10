@@ -1,6 +1,8 @@
-.. image:: docs/images/projectLogo/btbLogo.png
-    :width: 60
-    :align: center
+.. raw:: html
+
+    <p align="center">
+        <img src="https://github.com/SamuelDonovan/BuddyTheBroker/raw/main/docs/images/projectLogo/btbLogo.png" alt="Project Logo" width="60">
+    </p>
 
 Buddy the Broker
 ================
@@ -20,48 +22,61 @@ An embedded system allowing for my cat (Buddy) to trade stocks.
 .. |License badge| image:: https://img.shields.io/github/license/SamuelDonovan/BuddyTheBroker
    :alt: GitHub License
 
-Schedule
-========
+Demo
+====
 
-* 10/10
+Important notes for the demo:
 
-   * ☑ Display Library (libdisplay) written
+* The computer vision is very good but imperfect.
+* For the purposes of this demo the threshold necessary to trigger a trade has been turned down. When higher the signal to noise ratio makes these false positives negligible.
 
-   * ☑ Raspberry Pis flashed and all necessary hardware connected
+* The bottom “progress bar” shows time. Every ten minutes a new stock is show.
+* The top “progress bar” shows how many times Buddy has been seen relative to the necessary threshold.
 
-   * ☑ Network storage setup
+Three videos will be playing (roughly in sync)
+* Left - Raspberry Pi Camera (started slighted later as I show the bring up process)
+* Top right - My phone recording
+* Bottom right - Security camera
 
-* 10/17
+.. raw:: html
 
-   * ☑ Stock class (libstock) written
+    <p align="center">
+        <a href="https://www.youtube.com/watch?v=-1Nqzt0o9LU" target="_blank">
+            <img src="https://img.youtube.com/vi/-1Nqzt0o9LU/0.jpg" alt="Video Thumbnail" width="560" height="315">
+        </a>
+    </p>
 
-   * ☑ Trading library (libtrading) can buy and sell stocks
+AAPL is the ticker for Apple. 
 
-* 10/24
+As a result of this demo a buy order was placed 
 
-   * ☑ Camera library (libcamera) can identify cats and return coordinates
+.. figure:: docs/images/demo/buddyDetection.png
+    :alt: Buddy Detection 
+    :align: center
 
-* 10/31
+    Figure 1: Buddy Detected By Computer Vision 
 
-   * ☑ Camera library (libcamera) draws box and sends video to remote storage
+.. figure:: docs/images/demo/aaplTicker.png
+    :alt: AAPL Ticker On Display 
+    :align: center
 
-   * ☑ Trading library (libtrading) algorithm started
+    Figure 2: Stock Ticker On Display 
 
-* 11/7
+.. figure:: docs/images/demo/aaplBuyLog.png
+    :alt: Console Log Of Purchase
+    :align: center
 
-   * ☑ Trading library (libtrading) algorithm completed
+    Figure 3: Console Log Of Purchase 
 
-* 11/17
+.. figure:: docs/images/demo/aaplBuyPlaced.png
+    :alt: Robinhood Buy Order Placed 
+    :align: center
 
-   * ☑ Main written connecting all libraries
+    Figure 3: Robinhood Buy Order Placed
+Report
+======
 
-* 11/28
-
-   * ☑ Acceptance testing & polish product
-
-* 12/5
-
-   * ☐ Prepare final design report/demo
+`Link To Report <docs/BuddyTheBrokerReport.pdf>`_.
 
 Abstract
 ========
@@ -93,6 +108,8 @@ has recognized Buddy as in view for half of the trading interval that the stock 
 the system will make note his stock selection and open a buy order. Once his account depletes its
 purchasing power and he no longer has enough funds to execute his next stock pick the first stock he
 purchased will be sold to allow for him to continue making purchases. This first in first out nature will
+purchasing power and he no longer has enough funds to execute his next stock pick the first stock he
+purchased will be sold to allow for him to continue making purchases. This first in first out nature will
 continue as he makes more and more stock picks. To not get Buddy's account flagged as a pattern day
 trader he will be limited in the amount of buys that he can execute each day.
 
@@ -107,10 +124,10 @@ inconstant behavior can be leveraged as mechanism for his stock picks.
     :alt: OV-1 Diagram
     :align: center
 
-    Figure 1: OV-1 Diagram With Call Out Boxes
+    Figure 5: OV-1 Diagram With Call Out Boxes
 
 
-The operation view one (OV-1) diagram, Figure 1: OV-1 Diagram With Call Out Boxes,
+The operation view one (OV-1) diagram, Figure 5: OV-1 Diagram With Call Out Boxes,
 illustrates all of major components of the system. It can be seen that the system is broken into two
 separate physical pieces.
 
@@ -214,7 +231,7 @@ General Overview
 ----------------
 
 Further breaking down the system we can see the interactions between each of the physical
-modules. The operation view two (OV-2) diagram, Figure 2: OV-2 Diagram With Call Out Boxes,
+modules. The operation view two (OV-2) diagram, Figure 6: OV-2 Diagram With Call Out Boxes,
 illustrates these interactions. In the center of the diagram the it is shown that the Raspberry Pi which
 will interface with the camera and display will be a Raspberry Pi 4. A Raspberry Pi 4 is required here as
 computer vision software is computationally intensive. As shown in the diagram this Raspberry Pi will
@@ -231,11 +248,11 @@ picks to be verified and also show the fun computer vision cat identification bo
     :alt: OV-2 Diagram
     :align: center
 
-    Figure 2: OV-2 Diagram With Call Out Boxes
+    Figure 6: OV-2 Diagram With Call Out Boxes
 
 Notably OV-2 diagrams show the “what” not the “how” of interactions. If this diagram still
 leaves some to be desired in terms of interface description these interfaces can be expanded upon
-calling out the actually protocol being used. In Figure 3: OV-2 Diagram - Interfaces Expanded it can be
+calling out the actually protocol being used. In Figure 7: OV-2 Diagram - Interfaces Expanded it can be
 seen that Display Serial Interface (DSI) is the protocol used for the interface between the Raspberry Pi
 4 and the display, Mobile Industry Processor Interface (MIPI) is the protocol used for the interface
 between the Raspberry Pi 4 and the camera, and Server Message Block (SMB) is used for the interface
@@ -246,7 +263,7 @@ computer vision will be used though it should be noted that this is a library ra
     :alt: OV-2 Diagram (Interface Expanded)
     :align: center
 
-    Figure 3: OV-2 Diagram With Call Out Boxes
+    Figure 7: OV-2 Diagram With Call Out Boxes
 
 
 Functional Description
@@ -256,7 +273,7 @@ Project Hierarchy
 -----------------
 
 Breaking down the hierarchy of this project there will be two physical subsystems each
-comprised of their own hardware. Following Figure 4: OV-4 Diagram, the first subsystem will be
+comprised of their own hardware. Following Figure 8: OV-4 Diagram, the first subsystem will be
 denoted as subsystem A which will be comprised of the Raspberry Pi Display, Raspberry Pi 4, and
 Raspberry Pi Camera. The second subsystem will be denoted as subsystem B which will be comprised
 of the hard drive and Raspberry Pi Zero.
@@ -277,14 +294,12 @@ library can clearly be seen in the diagram.
     :alt: OV-4 Diagram
     :align: center
 
-    Figure 4: OV-4 Diagram
+    Figure 8: OV-4 Diagram
 
 Subsystem A: Main “Brains”
 --------------------------
 
-To get a more realistic depiction of what subsystem A will look like Figure 5: Subsystem A is
-provided. It can be seen that the camera, display, and Raspberry Pi will all fit together neatly in one
-case. This assembly will be mounted atop Buddy’s food dispenser. This case an pivot allowing for the
+To get a more realistic depiction of what subsystem A will look like Figure 9: Subsystem A is
 optimum camera angle to get the best view of Buddy. The Python logo on both the cartoon Pi and the
 “real” Pi depicts that this subsystem will be using Python for its various libraries.
 
@@ -292,7 +307,13 @@ optimum camera angle to get the best view of Buddy. The Python logo on both the 
     :alt: Subsytem A
     :align: center
 
-    Figure 5: Subsystem A
+    Figure 9: Subsystem A
+
+.. figure:: docs/images/functional_description/subsystem_a_implementation.png
+    :alt: Subsytem A Implementation
+    :align: center
+
+    Figure 10: Subsystem A Implementation
 
 Libcamera
 ~~~~~~~~~
@@ -329,7 +350,7 @@ ticker on a regularly interval.
 Subsystem B: Network Storage
 ----------------------------
 
-To get a more realistic depiction of what subsystem B will look like Figure 6: Subsytem B is
+To get a more realistic depiction of what subsystem B will look like Figure 11: Subsytem B is
 provided. It can be seen that Raspberry Pi will be connected to a hard drive docking station via a USB
 cable. This hard drive docking station will house a 4TB hard drive. The Open Media Vault logo on both
 the cartoon Pi and the “real” Pi depicts that this subsystem will be running Open Media Vault for its
@@ -339,7 +360,13 @@ operations.
     :alt: Subsytem B
     :align: center
 
-    Figure 6: Subsystem B
+    Figure 11: Subsystem B
+
+.. figure:: docs/images/functional_description/subsystem_b_implementation.png
+    :alt: Subsytem A Implementation
+    :align: center
+
+    Figure 12: Subsystem B Implementation
 
 Remote Storage (Open Media Vault Use Case)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -352,3 +379,81 @@ Why not use local storage on the Raspberry Pi 4 from subsystem A? The microSD sl
 the Pi from subsystem A that would make for a bulky setup and the HDD could easily be damaged by
 Buddy. Moreover, it would just be more fun to send the footage off to be saved in another room and
 this way it can easily accessed by any device on the network.
+
+Results
+=======
+
+Over several days the following stocks were bought and sold by Buddy.
+
++----------+------------------+------------+---------+
+|  Date    |  Stock           |  Buy/Sell  |  Price  |
++==========+==================+============+=========+
+| Dec 2nd  | Lockheed Martin  | Buy        | 482.01  |
++----------+------------------+------------+---------+
+| Dec 5th  | Nike             | Buy        | 109.60  |
++----------+------------------+------------+---------+
+| Dec 8th  | Microsoft        | Sell       | 245.05  |
++----------+------------------+------------+---------+
+| Dec 8th  | Apple            | Buy        | 142.67  |
++----------+------------------+------------+---------+
+| Dec 8th  | Lockheed Martin  | Sell       | 488.01  |
++----------+------------------+------------+---------+
+| Dec 8th  | Walmart          | Buy        | 149.04  |
++----------+------------------+------------+---------+
+| Dec 8th  | Nike             | Sell       | 110.75  |
++----------+------------------+------------+---------+
+| Dec 9th  | Union Pacific    | Buy        | 212.79  |
++----------+------------------+------------+---------+
+| Dec 9th  | AMD              | Sell       | 69.24   |
++----------+------------------+------------+---------+
+| Dec 9th  | Verizon          | Buy        | 37.54   |
++----------+------------------+------------+---------+
+| Dec 9th  | Coca-Cola        | Sell       | 63.64   |
++----------+------------------+------------+---------+
+| Dec 9th  | ConocoPhillips   | Buy        | 110.53  |
++----------+------------------+------------+---------+
+
+Schedule
+========
+
+* 10/10
+
+   * ☑ Display Library (libdisplay) written
+
+   * ☑ Raspberry Pis flashed and all necessary hardware connected
+
+   * ☑ Network storage setup
+
+* 10/17
+
+   * ☑ Stock class (libstock) written
+
+   * ☑ Trading library (libtrading) can buy and sell stocks
+
+* 10/24
+
+   * ☑ Camera library (libcamera) can identify cats and return coordinates
+
+* 10/31
+
+   * ☑ Camera library (libcamera) draws box and sends video to remote storage
+
+   * ☑ Trading library (libtrading) algorithm started
+
+* 11/7
+
+   * ☑ Trading library (libtrading) algorithm completed
+
+* 11/17
+
+   * ☑ Main written connecting all libraries
+
+* 11/28
+
+   * ☑ Acceptance testing & polish product
+
+* 12/5
+
+   * ☑ Prepare final design report/demo
+
+
